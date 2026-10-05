@@ -1,0 +1,184 @@
+/* ------------------------------------------------------------
+   Tokens: colors and typefaces defined once, reused everywhere.
+   Lines and secondary text are black with transparency, never a
+   separate grey, so they always match the ink.
+   ------------------------------------------------------------ */
+:root {
+    --paper: #ffffff;
+    --ink: #111111;
+    --muted: rgba(17, 17, 17, 0.6);
+    --hair: rgba(17, 17, 17, 0.14);
+    --sans: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+
+/* Remove the browser's default margins so spacing is ours. */
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/* Page: white sheet, centered column, plenty of air. */
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 96px 24px 48px;
+}
+
+/* Header: big grotesque headline, medium weight, tight tracking. */
+header {
+    margin-bottom: 96px;
+}
+
+h1 {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    max-width: 12ch;
+}
+
+header p {
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 52ch;
+}
+
+/* Section title with its index label on the same line. */
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.meta,
+th,
+footer {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+}
+
+/* Table as a catalogue: hairline rows, no boxes. */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+th {
+    text-align: left;
+    font-weight: 400;
+    padding: 16px 0 12px;
+    border-bottom: 1px solid var(--hair);
+}
+
+td {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--hair);
+    color: rgba(17, 17, 17, 0.55);
+}
+
+/* First column (country code) in mono, like a catalogue index. */
+td:first-child {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink);
+    text-transform: uppercase;
+    width: 15%;
+}
+
+/* Last column (number of jobs): right-aligned, digits lined up. */
+th:last-child,
+td:last-child {
+    text-align: right;
+}
+
+td:last-child {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Subtle highlight when the mouse is over a row. */
+tbody tr:hover {
+    background: rgba(17, 17, 17, 0.03);
+    opacity: 0.5;
+}
+
+footer {
+    border-top: 1px solid var(--hair);
+    padding-top: 16px;
+}
+
+/* Phones: smaller headline and less padding. */
+@media (max-width: 600px) {
+    body {
+        padding: 48px 16px 32px;
+    }
+
+    header {
+        margin-bottom: 56px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+}
+/* ------------------------------------------------------------
+   Ukraine War Tracker additions
+   ------------------------------------------------------------ */
+section {
+    margin-bottom: 72px;
+}
+
+h1 {
+    max-width: 14ch;
+}
+
+/* Fixed height so Chart.js has a box to fill. */
+.chart-box {
+    position: relative;
+    height: 320px;
+    margin-top: 24px;
+}
+
+/* Category names are words, not codes: no uppercase here. */
+td:first-child {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    text-transform: none;
+    width: auto;
+}
+
+td:nth-child(2),
+th:nth-child(2) {
+    text-align: right;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+}
+
+tbody tr {
+    cursor: pointer;
+}
+
+.hint {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--muted);
+}
