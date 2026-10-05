@@ -21,3 +21,5 @@ DECISIONS
 8. The chart shows the cumulative total, not the daily increase. Daily numbers are noisy and hard to read over four years; the total shows the trend.
 9. Chart.js from a CDN, same as planned in the job tracker. No build step, no framework.
 10. Daily updates with GitHub Actions at 12:00 UTC: it runs fetch.py and commits losses.db. losses.db is in git on purpose, because Vercel can't write to disk, so the database has to arrive with the code.
+11. Design: my "espacio abierto" minimal style (same as my portfolio). One screen per section, small uppercase text, mono only for numbers and dates, no borders or shadows, separated by space, not lines. The only colour is rust on hover. For a war tracker, the empty space makes the numbers weigh more; it should feel like a quiet report, not a dashboard.
+12. The headline number is personnel, because it is the figure that sets the scale. The three notes are today's personnel, drones and artillery: the biggest daily movers.

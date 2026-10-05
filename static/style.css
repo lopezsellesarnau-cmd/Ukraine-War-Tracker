@@ -1,184 +1,380 @@
 /* ------------------------------------------------------------
-   Tokens: colors and typefaces defined once, reused everywhere.
-   Lines and secondary text are black with transparency, never a
-   separate grey, so they always match the ink.
+   Minimal "espacio abierto": almost empty screens, small text,
+   an invisible 6-column grid. White space is the design.
+   Greys are the ink with opacity, never a separate colour.
+   Rust is the only colour, and only on link hover.
    ------------------------------------------------------------ */
 :root {
-    --paper: #ffffff;
-    --ink: #111111;
-    --muted: rgba(17, 17, 17, 0.6);
-    --hair: rgba(17, 17, 17, 0.14);
-    --sans: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --paper: #FCFCFB;
+    --ink: #141310;
+    --ink-72: rgba(20, 19, 16, 0.72);
+    --ink-55: rgba(20, 19, 16, 0.55);
+    --ink-42: rgba(20, 19, 16, 0.42);
+    --ink-28: rgba(20, 19, 16, 0.28);
+    --block: #EDEDEB;
+    --rust: #B0413D;
+    --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
 
-/* Remove the browser's default margins so spacing is ours. */
 * {
     box-sizing: border-box;
     margin: 0;
+    padding: 0;
 }
 
-/* Page: white sheet, centered column, plenty of air. */
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
 body {
     background: var(--paper);
     color: var(--ink);
     font-family: var(--sans);
-    font-size: 15px;
+    font-size: 12px;
+    font-weight: 400;
     line-height: 1.5;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 96px 24px 48px;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Header: big grotesque headline, medium weight, tight tracking. */
-header {
-    margin-bottom: 96px;
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
-h1 {
-    font-size: 56px;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    max-width: 12ch;
+a:hover {
+    color: var(--rust);
 }
 
-header p {
-    margin-top: 24px;
-    color: var(--muted);
-    font-size: 17px;
-    max-width: 52ch;
-}
-
-/* Section title with its index label on the same line. */
-.section-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--ink);
-}
-
-h2 {
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-}
-
-.meta,
-th,
-footer {
+.mono {
     font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+}
+
+/* One container and one grid. Everything lines up to it. */
+.frame {
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: 1.5rem;
+}
+
+/* ---------- Menu: fixed, paper at 85% ---------- */
+.menu {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 10;
+    background: rgba(252, 252, 251, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.menu .grid {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    align-items: start;
+}
+
+.name,
+.links a {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.01em;
+}
+
+.menu-title {
+    grid-column: 2 / 4;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted);
+    letter-spacing: 0.01em;
+    color: var(--ink-42);
+    line-height: 1.45;
 }
 
-/* Table as a catalogue: hairline rows, no boxes. */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
+.links {
+    grid-column: 4 / 7;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.25rem;
 }
 
-th {
-    text-align: left;
-    font-weight: 400;
-    padding: 16px 0 12px;
-    border-bottom: 1px solid var(--hair);
+/* Active section: underlined below, never struck through. */
+.links a.active {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 1px;
 }
 
-td {
-    padding: 18px 0;
-    border-bottom: 1px solid var(--hair);
-    color: rgba(17, 17, 17, 0.55);
+/* ---------- Sections: one screen each ---------- */
+.screen {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5rem 0 2rem;
 }
 
-/* First column (country code) in mono, like a catalogue index. */
-td:first-child {
-    font-family: var(--mono);
-    font-size: 12.5px;
-    color: var(--ink);
+.corners {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
     text-transform: uppercase;
-    width: 15%;
+    letter-spacing: 0.01em;
+    color: var(--ink-42);
 }
 
-/* Last column (number of jobs): right-aligned, digits lined up. */
-th:last-child,
-td:last-child {
-    text-align: right;
+.center {
+    width: 100%;
 }
 
-td:last-child {
-    font-family: var(--mono);
-    font-variant-numeric: tabular-nums;
-}
-
-/* Subtle highlight when the mouse is over a row. */
-tbody tr:hover {
-    background: rgba(17, 17, 17, 0.03);
-    opacity: 0.5;
-}
-
-footer {
-    border-top: 1px solid var(--hair);
-    padding-top: 16px;
-}
-
-/* Phones: smaller headline and less padding. */
-@media (max-width: 600px) {
-    body {
-        padding: 48px 16px 32px;
-    }
-
-    header {
-        margin-bottom: 56px;
-    }
-
-    h1 {
-        font-size: 40px;
-    }
-}
-/* ------------------------------------------------------------
-   Ukraine War Tracker additions
-   ------------------------------------------------------------ */
-section {
-    margin-bottom: 72px;
-}
-
+/* ---------- 01 Today ---------- */
 h1 {
-    max-width: 14ch;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
 }
 
-/* Fixed height so Chart.js has a box to fill. */
+.sub {
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--ink-55);
+}
+
+/* Notes in a staircase, one grid column further right each time. */
+.notes {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    column-gap: 1.5rem;
+    margin-top: 5rem;
+}
+
+.notes li {
+    display: flex;
+    gap: 0.75rem;
+    color: var(--ink-72);
+}
+
+.notes li:nth-child(1) { grid-column: 1 / 3; }
+.notes li:nth-child(2) { grid-column: 2 / 4; margin-top: 3.5rem; }
+.notes li:nth-child(3) { grid-column: 3 / 5; margin-top: 7rem; }
+
+.notes .index {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-42);
+    padding-top: 1px;
+}
+
+/* ---------- 02 Chart ---------- */
 .chart-box {
     position: relative;
+    width: 66%;
     height: 320px;
-    margin-top: 24px;
+    margin: 0 auto;
 }
 
-/* Category names are words, not codes: no uppercase here. */
-td:first-child {
-    font-family: var(--sans);
-    font-size: 13.5px;
-    text-transform: none;
-    width: auto;
+/* ---------- 03 Report ---------- */
+.list-head,
+.list button {
+    grid-template-columns: 3rem 1fr 7rem 8rem;
 }
 
-td:nth-child(2),
-th:nth-child(2) {
-    text-align: right;
-    font-family: var(--mono);
-    font-variant-numeric: tabular-nums;
+.list-head {
+    width: 66%;
+    margin: 0 auto 1rem;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--ink-42);
 }
 
-tbody tr {
+.list {
+    list-style: none;
+    width: 66%;
+    margin: 0 auto;
+}
+
+.list button {
+    display: grid;
+    column-gap: 1.5rem;
+    width: 100%;
+    padding: 0.4rem 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: var(--ink-55);
+    text-align: left;
     cursor: pointer;
 }
 
-.hint {
-    margin-top: 12px;
+.list .index {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-28);
+    padding-top: 1px;
+}
+
+.list .label {
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+.num,
+.list .today,
+.list .total {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.list button:hover {
+    color: var(--rust);
+}
+
+.list button.active {
+    color: var(--ink);
+}
+
+.list button.active .label {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 1px;
+}
+
+/* ---------- 04 Years: one row, oldest to newest ---------- */
+.years {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 1.5rem;
+}
+
+.years .year {
+    font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+    letter-spacing: 0.01em;
+}
+
+.years .year span {
+    color: var(--ink-28);
+}
+
+.years .value {
+    margin-top: 0.75rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-55);
+}
+
+.bottom-text {
+    color: var(--ink);
+    text-transform: none;
+}
+
+.bottom-text h2 {
     font-size: 12px;
-    color: var(--muted);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+}
+
+.bottom-text p {
+    margin-top: 0.5rem;
+    max-width: 34ch;
+    font-size: 12px;
+    color: var(--ink-55);
+}
+
+/* ---------- 05 About: small grey block, label / value rows ---------- */
+.block {
+    max-width: 470px;
+    margin: 0 auto;
+    padding: 1.5rem 1.75rem;
+    background: var(--block);
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0.6rem 1.25rem;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+}
+
+.block dt {
+    text-align: right;
+    color: var(--ink-42);
+}
+
+.block dd.mono {
+    font-size: 10.5px;
+}
+
+/* ---------- Phones: 2-3 columns, less padding ---------- */
+@media (max-width: 700px) {
+    .frame {
+        padding: 0 1rem;
+    }
+
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 1rem;
+    }
+
+    .menu-title {
+        display: none;
+    }
+
+    .links {
+        grid-column: 2 / 4;
+        gap: 0.75rem;
+    }
+
+    .links a:nth-child(n+4) {
+        display: none;
+    }
+
+    .notes {
+        grid-template-columns: 1fr;
+        row-gap: 1.25rem;
+    }
+
+    .notes li:nth-child(n) {
+        grid-column: auto;
+        margin-top: 0;
+    }
+
+    .chart-box,
+    .list-head,
+    .list {
+        width: 100%;
+    }
+
+    .chart-box {
+        height: 260px;
+    }
+
+    .list-head,
+    .list button {
+        grid-template-columns: 2rem 1fr 4.5rem 5.5rem;
+        column-gap: 0.75rem;
+    }
+
+    .years {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 2rem;
+    }
 }

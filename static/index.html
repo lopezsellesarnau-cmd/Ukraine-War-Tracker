@@ -5,52 +5,132 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ukraine War Tracker</title>
+    <meta name="description" content="Daily Russian equipment and personnel losses in Ukraine, as claimed by Ukraine's General Staff.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css" />
 </head>
 
 <body>
-    <header>
-        <h1>Russian losses in Ukraine</h1>
-        <p>Equipment and personnel losses, updated every day.
-            Figures as claimed by Ukraine's General Staff, not independently verified.
-        </p>
-    </header>
-    <main>
-        <section>
-            <div class="section-head">
-                <h2 id="chart-title">Tanks</h2>
-                <p class="meta">Cumulative total since 24 Feb 2022</p>
+    <nav class="menu">
+        <div class="frame grid">
+            <a class="name" href="#today">Ukraine War Tracker</a>
+            <p class="menu-title">Russian losses<br>claimed by Ukraine</p>
+            <div class="links">
+                <a href="#today">Today</a>
+                <a href="#chart">Chart</a>
+                <a href="#report">Report</a>
+                <a href="#years">Years</a>
+                <a href="#about">About</a>
             </div>
-            <div class="chart-box">
-                <canvas id="chart"></canvas>
+        </div>
+    </nav>
+
+    <main class="frame">
+        <!-- 01 Today: one number that sets the scale, three notes for today -->
+        <section class="screen" id="today">
+            <div class="corners">
+                <span>[01] Today</span>
+                <span class="mono" id="day">Day ----</span>
+            </div>
+            <div class="center">
+                <h1 id="hero">Russian losses<br>in Ukraine</h1>
+                <p class="sub">Figures as claimed by Ukraine's General Staff. Not independently verified.</p>
+                <ol class="notes" id="notes"></ol>
+            </div>
+            <div class="corners">
+                <span class="mono" id="report-date">----</span>
+                <span>Updated daily, 12:00 UTC</span>
             </div>
         </section>
-        <section>
-            <div class="section-head">
-                <h2>Latest report</h2>
-                <p class="meta" id="meta">Loading</p>
+
+        <!-- 02 Chart: cumulative total for the selected category -->
+        <section class="screen" id="chart">
+            <div class="corners">
+                <span>[02] Cumulative since 24 Feb 2022</span>
+                <span></span>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Today</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="results"></tbody>
-            </table>
-            <p class="hint">Click a row to see its chart.</p>
+            <div class="center">
+                <div class="chart-box">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </div>
+            <div class="corners">
+                <span id="chart-label">Tanks</span>
+                <span>Press a category in the report</span>
+            </div>
+        </section>
+
+        <!-- 03 Report: the latest daily report, every category -->
+        <section class="screen" id="report">
+            <div class="corners">
+                <span>[03] Latest report</span>
+                <span class="mono" id="report-date-2">----</span>
+            </div>
+            <div class="center">
+                <div class="list-head grid">
+                    <span>No.</span>
+                    <span>Category</span>
+                    <span class="num">Today</span>
+                    <span class="num">Total</span>
+                </div>
+                <ul class="list" id="list"></ul>
+            </div>
+            <div class="corners">
+                <span>15 categories</span>
+                <span>Press a category</span>
+            </div>
+        </section>
+
+        <!-- 04 Years: losses of the selected category per year -->
+        <section class="screen" id="years">
+            <div class="corners">
+                <span>[04] Per year</span>
+                <span></span>
+            </div>
+            <div class="center">
+                <ol class="years" id="year-row"></ol>
+            </div>
+            <div class="corners bottom-text">
+                <div>
+                    <h2 id="years-title">Tanks per year</h2>
+                    <p>Losses added in each calendar year. 2022 starts on 24 February, 2026 runs to the latest report.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05 About: source and how it is built -->
+        <section class="screen" id="about">
+            <div class="corners">
+                <span>[05] About</span>
+                <span></span>
+            </div>
+            <div class="center">
+                <dl class="block">
+                    <dt>Source</dt>
+                    <dd><a href="https://russianwarship.rip" target="_blank" rel="noopener">russianwarship.rip</a></dd>
+                    <dt>Figures</dt>
+                    <dd>Claimed by Ukraine's General Staff, not independently verified</dd>
+                    <dt>Coverage</dt>
+                    <dd class="mono" id="coverage">----</dd>
+                    <dt>Updated</dt>
+                    <dd>Daily, 12:00 UTC</dd>
+                    <dt>Stack</dt>
+                    <dd class="mono">Python · FastAPI · SQLite · Chart.js</dd>
+                    <dt>Code</dt>
+                    <dd><a href="https://github.com/lopezsellesarnau-cmd/Ukraine-War-Tracker" target="_blank" rel="noopener">GitHub</a></dd>
+                    <dt>Built by</dt>
+                    <dd><a href="https://arnau-lopez.com" target="_blank" rel="noopener">Arnau López</a></dd>
+                </dl>
+            </div>
+            <div class="corners">
+                <span>Ukraine War Tracker</span>
+                <span class="mono">2026</span>
+            </div>
         </section>
     </main>
-    <footer>
-        <p>Data: russianwarship.rip (General Staff of the Armed Forces of Ukraine) · Built by Arnau López</p>
-    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="/static/script.js"></script>
 </body>
