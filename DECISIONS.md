@@ -8,6 +8,7 @@ STEPS
 7. Run it daily with GitHub Actions.
 8. Build the frontend on /static (HTML, CSS, JS).
 9. Deploy and record the video.
+10. v2: compare claimed (Ukraine) vs confirmed (Oryx) with oryx.py, a confirmed table and /compare.
 
 
 DECISIONS
@@ -23,3 +24,11 @@ DECISIONS
 10. Daily updates with GitHub Actions at 12:00 UTC: it runs fetch.py and commits losses.db. losses.db is in git on purpose, because Vercel can't write to disk, so the database has to arrive with the code.
 11. Design: my "espacio abierto" minimal style (same as my portfolio). One screen per section, small uppercase text, mono only for numbers and dates, no borders or shadows, separated by space, not lines. The only colour is rust on hover. For a war tracker, the empty space makes the numbers weigh more; it should feel like a quiet report, not a dashboard.
 12. The headline number is personnel, because it is the figure that sets the scale. The three notes are today's personnel, drones and artillery: the biggest daily movers.
+
+v2: CLAIMED VS CONFIRMED
+13. Second source: Oryx, because it only counts losses with a photo or video, so it is the opposite of the claimed figures: a minimum instead of an unverified total. Putting both side by side answers the question I got most: "is this real or just Ukraine's numbers?"
+14. Oryx has no API, so oryx.py downloads the page and reads the category headers with a regex ("Tanks (4452, of which ..."). If no Tanks header is found it raises an error instead of saving an empty day, because a silent zero would look like real data.
+15. A separate table (confirmed), not new columns in losses, because Oryx's categories are different (23 vs 15) and it only gives today's totals, not a history. I save one snapshot per day, so the history builds up from 8 Oct 2026.
+16. Matching categories: each claimed category maps to the Oryx categories that count the same thing (armoured vehicles = AFVs + IFVs + APCs + MRAPs + infantry mobility vehicles). Personnel, drones and missiles are left out, because Oryx doesn't count them and a fake match would be worse than no match.
+17. The ratio is claimed / confirmed. Close to 1 means both sources agree (ships 0.9×, helicopters 1.9×). Very high means the categories probably don't count the same things (artillery 30×, likely mortars and small guns; trucks 34×), so I show the number and don't explain it away.
+18. In the GitHub Action, the Oryx step has continue-on-error, so if Oryx breaks, Ukraine's daily data still gets committed.
