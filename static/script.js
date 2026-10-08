@@ -184,6 +184,26 @@ function drawYears(rows) {
     document.getElementById("year-row").innerHTML = items.join("");
 }
 
+// ---------- Claimed vs confirmed ----------
+async function loadCompare() {
+    const response = await fetch("/compare");
+    const data = await response.json();
+    document.getElementById("compare-date").textContent = `Oryx · ${data.confirmed_date}`;
+
+    // Same rows as the report list, with Oryx's number and how many times bigger the claim is.
+    document.getElementById("compare-list").innerHTML = data.rows.map((row, i) => `
+        <li>
+            <div class="compare grid row">
+                <span class="index">${String(i + 1).padStart(2, "0")}</span>
+                <span class="label">${row.category === "warships_cutters" ? "Warships and submarines" : LABELS[row.category]}</span>
+                <span class="today">${number.format(row.claimed)}</span>
+                <span class="total">${number.format(row.confirmed)}</span>
+                <span class="total">${row.ratio}×</span>
+            </div>
+        </li>
+    `).join("");
+}
+
 // ---------- Menu: underline the section on screen ----------
 const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
@@ -197,3 +217,4 @@ const observer = new IntersectionObserver(entries => {
 document.querySelectorAll(".screen").forEach(section => observer.observe(section));
 
 loadLatest().then(() => selectCategory(selected));
+loadCompare();
