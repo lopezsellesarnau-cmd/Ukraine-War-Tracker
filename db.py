@@ -52,3 +52,79 @@ def get_history(category):
     ).fetchall()
     conn.close()
     return [dict(row) for row in rows]
+
+
+# ---------- Confirmed losses (Oryx) ----------
+
+def create_confirmed_table():
+    conn = sqlite3.connect(DB_FILE)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS confirmed (
+        date TEXT,
+        category TEXT,
+        total INTEGER,
+        PRIMARY KEY (date, category)
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+def save_confirmed(day, totals):
+    conn = sqlite3.connect(DB_FILE)
+    for category, total in totals.items():
+        conn.execute(
+            "INSERT OR REPLACE INTO confirmed (date, category, total) VALUES (?, ?, ?)",
+            (day, category, total)
+        )
+    conn.commit()
+    conn.close()
+
+
+# Ukraine and Oryx don't use the same categories, so each claimed category
+# is matched to the Oryx categories that count the same kind of equipment.
+# Categories with no fair match (personnel, drones, missiles) are left out.
+MATCHES = {
+    "tanks": ["Tanks"],
+    "armoured_fighting_vehicles": [
+        "Armoured Fighting Vehicles", "Infantry Fighting Vehicles",
+        "Armoured Personnel Carriers", "Mine-Resistant Ambush Protected (MRAP) Vehicles",
+        "Infantry Mobility Vehicles",
+    ],
+    "artillery_systems": ["Towed Artillery", "Self-Propelled Artillery"],
+    "mlrs": ["Rocket and Missile Artillery"],
+    "aa_warfare_systems": [
+        "Surface-To-Air Missile Systems", "Self-Propelled Anti-Aircraft Guns", "Anti-Aircraft Guns",
+    ],
+    "planes": ["Aircraft"],
+    "helicopters": ["Helicopters"],
+    "warships_cutters": ["Naval Ships and Submarines"],
+    "vehicles_fuel_tanks": ["Trucks and similar vehicles"],
+}
+
+
+def get_compare():
+    conn = sqlite3.connect(DB_FILE)
+    claimed = dict(conn.execute(
+        "SELECT category, total FROM losses WHERE date = (SELECT MAX(date) FROM losses)"
+    ).fetchall())
+    confirmed_date = conn.execute("SELECT MAX(date) FROM confirmed").fetchone()[0]
+    confirmed = dict(conn.execute(
+        "SELECT category, total FROM confirmed WHERE date = ?", (confirmed_date,)
+    ).fetchall())
+    conn.close()
+
+    rows = []
+    for category, oryx_categories in MATCHES.items():
+        claimed_total = claimed.get(category, 0)
+        # Oryx counts ships and submarines together, so Ukraine's two do too.
+        if category == "warships_cutters":
+            claimed_total += claimed.get("submarines", 0)
+        confirmed_total = sum(confirmed.get(name, 0) for name in oryx_categories)
+        rows.append({
+            "category": category,
+            "claimed": claimed_total,
+            "confirmed": confirmed_total,
+            "ratio": round(claimed_total / confirmed_total, 1) if confirmed_total else None,
+        })
+    return {"confirmed_date": confirmed_date, "rows": rows}
